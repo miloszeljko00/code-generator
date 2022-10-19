@@ -8,7 +8,7 @@ data = {
         "properties": [
             {
                 "type": "long",
-                "name": "Id"
+                "name": "Pera"
             },
             {
                 "type": "string",
@@ -90,7 +90,7 @@ if __name__ == '__main__':
         generate_repository()
         print("Generating service...")
         generate_service()
-        raise Exception("greskadsdadsa")
+        print("Successfully generated all files :)")
     except Exception as e:
         print("Something else went wrong :(")
         print("\n\nERORR:\n")

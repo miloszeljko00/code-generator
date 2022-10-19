@@ -23,7 +23,7 @@ namespace HospitalLibrary.Core.Repository
     public interface I{{class.name}}Repository
     {
         IEnumerable<{{class.name}}> GetAll();
-        {{class.name}} GetById({{class.properties[0].type}} {{class.properties[0].name.lower()}});
+        {{class.name}} GetBy{{class.properties[0].name}}({{class.properties[0].type}} {{class.properties[0].name.lower()}});
         void Create({{class.name}} {{class.name.lower()}});
         void Update({{class.name}} {{class.name.lower()}});
         void Delete({{class.name}} {{class.name.lower()}});
@@ -54,7 +54,7 @@ namespace HospitalLibrary.Core.Repository
             return _context.{{class.name}}s.ToList();
         }
 
-        public {{class.name}} GetById({{class.properties[0].type}} {{class.properties[0].name.lower()}})
+        public {{class.name}} GetBy{{class.properties[0].name}}({{class.properties[0].type}} {{class.properties[0].name.lower()}})
         {
             return _context.{{class.name}}s.Find({{class.properties[0].name.lower()}});
         }
@@ -97,7 +97,7 @@ namespace HospitalLibrary.Core.Service
     public interface I{{class.name}}Service
     {
         IEnumerable<{{class.name}}> GetAll();
-        {{class.name}} GetById({{class.properties[0].type}} {{class.properties[0].name.lower()}});
+        {{class.name}} GetBy{{class.properties[0].name}}({{class.properties[0].type}} {{class.properties[0].name.lower()}});
         void Create({{class.name}} {{class.name.lower()}});
         void Update({{class.name}} {{class.name.lower()}});
         void Delete({{class.name}} {{class.name.lower()}});
@@ -126,9 +126,9 @@ namespace HospitalLibrary.Core.Service
             return _{{class.name.lower()}}Repository.GetAll();
         }
 
-        public {{class.name}} GetById({{class.properties[0].type}} {{class.properties[0].name.lower()}})
+        public {{class.name}} GetBy{{class.properties[0].name}}({{class.properties[0].type}} {{class.properties[0].name.lower()}})
         {
-            return _{{class.name.lower()}}Repository.GetById({{class.properties[0].name.lower()}});
+            return _{{class.name.lower()}}Repository.GetBy{{class.properties[0].name}}({{class.properties[0].name.lower()}});
         }
 
         public void Create({{class.name}} {{class.name.lower()}})
