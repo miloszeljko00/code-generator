@@ -1,16 +1,25 @@
-from models import *
-from jinja2 import Template
-import os
+from jinja2 import Template, Environment, FileSystemLoader
+from inflection import underscore, camelize
 import yaml
+import os
+
+import models_csharp
+import models_java
+
 
 def generate_model():
     exists = os.path.exists(current_directory + "\\model\\")
     if not exists:
         os.makedirs("model")
+    if data["language"] == "Java":
+        model_file = open(current_directory + "\\model\\" + data["class"]["name"] + ".java", "w")
+        j2_template = Template(models_java.model_template)
+        j2_template.globals['underscore'] = underscore
+        j2_template.globals['camelize'] = camelize
+    else:
+        model_file = open(current_directory + "\\model\\" + data["class"]["name"] + ".cs", "w")
+        j2_template = Template(models_csharp.model_template)
 
-    model_file = open(current_directory + "\\model\\" + data["class"]["name"] + ".cs", "w")
-
-    j2_template = Template(model_template)
     model_file.write(j2_template.render(data))
 
     model_file.close()
@@ -23,14 +32,14 @@ def generate_repository():
 
     repository_interface_file = open(current_directory + "\\repository\\I" + data["class"]["name"]+"Repository.cs", "w")
 
-    j2_template = Template(repository_interface_template)
+    j2_template = Template(models_csharp.repository_interface_template)
     repository_interface_file.write(j2_template.render(data))
 
     repository_interface_file.close()
 
     repository_file = open(current_directory + "\\repository\\" + data["class"]["name"] + "Repository.cs", "w")
 
-    j2_template = Template(repository_template)
+    j2_template = Template(models_csharp.repository_template)
     repository_file.write(j2_template.render(data))
 
     repository_file.close()
@@ -43,14 +52,14 @@ def generate_service():
 
     repository_interface_file = open(current_directory + "\\service\\I" + data["class"]["name"]+"Service.cs", "w")
 
-    j2_template = Template(service_interface_template)
+    j2_template = Template(models_csharp.service_interface_template)
     repository_interface_file.write(j2_template.render(data))
 
     repository_interface_file.close()
 
     repository_file = open(current_directory + "\\service\\" + data["class"]["name"] + "Service.cs", "w")
 
-    j2_template = Template(service_template)
+    j2_template = Template(models_csharp.service_template)
     repository_file.write(j2_template.render(data))
 
     repository_file.close()
@@ -63,7 +72,7 @@ def generate_controller():
 
     controller_file = open(current_directory + "\\controller\\" + data["class"]["name"] + "Controller.cs", "w")
 
-    j2_template = Template(controller_template)
+    j2_template = Template(models_csharp.controller_template)
     controller_file.write(j2_template.render(data))
 
     controller_file.close()
