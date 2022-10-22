@@ -1,0 +1,12 @@
+language: "C#"
+class:
+  name: "User"
+  properties:
+    - type: "long"
+      name: "Id"
+    - type: "string"
+      name: "Username"
+    - type: "string"
+      name: "Password"
+    - type: "List<Rooms>"
+      name: "Rooms"

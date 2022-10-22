@@ -88,7 +88,7 @@ namespace HospitalLibrary.Core.Repository
 }
 """
 
-service_interface_template="""
+service_interface_template = """
 using HospitalLibrary.Core.Model;
 using System.Collections.Generic;
 
@@ -105,7 +105,7 @@ namespace HospitalLibrary.Core.Service
 }
 """
 
-service_template="""
+service_template = """
 using HospitalLibrary.Core.Model;
 using HospitalLibrary.Core.Repository;
 using System.Collections.Generic;
@@ -144,6 +144,95 @@ namespace HospitalLibrary.Core.Service
         public void Delete({{class.name}} {{class.name.lower()}})
         {
             _{{class.name.lower()}}Repository.Delete({{class.name.lower()}});
+        }
+    }
+}
+"""
+
+controller_template = """
+using HospitalLibrary.Core.Model;
+using HospitalLibrary.Core.Service;
+using Microsoft.AspNetCore.Mvc;
+
+namespace HospitalAPI.Controllers
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    public class {{class.name}}sController : ControllerBase
+    {
+        private readonly I{{class.name}}Service _{{class.name.lower()}}Service;
+
+        public {{class.name}}sController(I{{class.name}}Service {{class.name.lower()}}Service)
+        {
+            _{{class.name.lower()}}Service = {{class.name.lower()}}Service;
+        }
+
+        [HttpGet]
+        public ActionResult GetAll()
+        {
+            return Ok(_{{class.name.lower()}}Service.GetAll());
+        }
+
+        [HttpGet("{% raw %}{{% endraw %}{{class.properties[0].name.lower()}}{% raw %}}{% endraw %}")]
+        public ActionResult GetBy{{class.properties[0].name}}({{class.properties[0].type}} {{class.properties[0].name.lower()}})
+        {
+            var {{class.name.lower()}} = _{{class.name.lower()}}Service.GetBy{{class.properties[0].name}}({{class.properties[0].name.lower()}});
+            if ({{class.name.lower()}} == null)
+            {
+                return NotFound();
+            }
+
+            return Ok({{class.name.lower()}});
+        }
+
+        [HttpPost]
+        public ActionResult Create({{class.name}} {{class.name.lower()}})
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            _{{class.name.lower()}}Service.Create({{class.name.lower()}});
+            return CreatedAtAction("GetBy{{class.properties[0].name}}", new { {{class.properties[0].name.lower()}} = {{class.name.lower()}}.{{class.properties[0].name}} }, {{class.name.lower()}});
+        }
+
+        [HttpPut("{% raw %}{{% endraw %}{{class.properties[0].name.lower()}}{% raw %}}{% endraw %}")]
+        public ActionResult Update({{class.properties[0].type}} {{class.properties[0].name.lower()}}, {{class.name}} {{class.name.lower()}})
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            if ({{class.properties[0].name.lower()}} != {{class.name.lower()}}.{{class.properties[0].name}})
+            {
+                return BadRequest();
+            }
+
+            try
+            {
+                _{{class.name.lower()}}Service.Update({{class.name.lower()}});
+            }
+            catch
+            {
+                return BadRequest();
+            }
+
+            return Ok({{class.name.lower()}});
+        }
+
+        [HttpDelete("{% raw %}{{% endraw %}{{class.properties[0].name.lower()}}{% raw %}}{% endraw %}")]
+        public ActionResult Delete({{class.properties[0].type}} {{class.properties[0].name.lower()}})
+        {
+            var {{class.name.lower()}} = _{{class.name.lower()}}Service.GetBy{{class.properties[0].name}}({{class.properties[0].name.lower()}});
+            if ({{class.name.lower()}} == null)
+            {
+                return NotFound();
+            }
+
+            _{{class.name.lower()}}Service.Delete({{class.name.lower()}});
+            return NoContent();
         }
     }
 }
